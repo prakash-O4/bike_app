@@ -1,12 +1,24 @@
 import 'package:bike_app/presentation/book_ride/widget/booking_card.dart';
 import 'package:bike_app/presentation/book_ride/widget/bottom_card.dart';
-import 'package:bike_app/presentation/theme/colors.dart';
+import 'package:bike_app/presentation/book_ride/widget/destination_card.dart';
+import 'package:bike_app/presentation/book_ride/widget/green_card.dart';
+import 'package:bike_app/presentation/book_ride/widget/top_card.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class BookRide extends StatelessWidget {
+class BookRide extends StatefulWidget {
   const BookRide({Key? key}) : super(key: key);
 
+  @override
+  _BookRideState createState() => _BookRideState();
+}
+
+class _BookRideState extends State<BookRide> {
+  bool showBottom = true;
+  bool showDestination = false;
+  bool anotherDest = true;
+  var continueDestination = false;
+  bool hide = false;
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -18,12 +30,14 @@ class BookRide extends StatelessWidget {
               height: size.height,
               width: size.width,
               color: Colors.grey,
+              child: MapApp(),
             ),
             Positioned(
               top: size.height * 0.066,
               right: size.width * 0.10,
               left: size.width * 0.10,
               child: Container(
+                height: 137,
                 width: size.width,
                 padding: EdgeInsets.fromLTRB(30, 20, 30, 20),
                 decoration: BoxDecoration(
@@ -42,148 +56,26 @@ class BookRide extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0, bottom: 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                height: 15,
-                                width: 15,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image:
-                                        AssetImage("images/greenEllipse.png"),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Container(
-                                height: 10,
-                                width: 1.3,
-                                decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Container(
-                                height: 10,
-                                width: 1.3,
-                                decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Container(
-                                height: 15,
-                                width: 15,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage("images/greenL.png"),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    TopCard(showDown: showBottom),
                     const SizedBox(width: 20),
                     Expanded(
                       child: Container(
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      "From",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        color: ColorConstants.lightTextColor,
-                                      ),
-                                    ),
-                                    Text(
-                                      "Your Location",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        color: ColorConstants.boldTextColor,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  height: 24,
-                                  width: 24,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage("images/edit.png"),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: 10,
-                                bottom: 10,
-                              ),
-                              child: Container(
-                                height: 1,
-                                width: size.width * 0.53,
-                                color: ColorConstants.dividerColor,
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "To",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        color: ColorConstants.lightTextColor,
-                                      ),
-                                    ),
-                                    Text(
-                                      "Add a destination",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        color: ColorConstants.destinationColor,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  height: 24,
-                                  width: 24,
-                                  child: Icon(
-                                    Icons.add_circle_outline,
-                                    color: ColorConstants.lightIconColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                        child: TopLocation(
+                          destination: anotherDest,
+                          onTapIcon: () {
+                            setState(() {
+                              showDestination = true;
+                              anotherDest = false;
+                              print(showDestination);
+                            });
+                          },
+                          afterFall: false,
+                          onTap: () {
+                            setState(() {
+                              showBottom = false;
+                            });
+                          },
+                          show: showBottom,
                         ),
                       ),
                     ),
@@ -216,12 +108,57 @@ class BookRide extends StatelessWidget {
             ),
             // * Bottom Sheet Card
             BottomCard(),
-            // Positioned(
-            //   bottom: 0,
-            //   left: 0,
-            //   right: 0,
-            //   child: BookingBottomCard(),
-            // )
+            AnimatedPositioned(
+              bottom: 0,
+              right: 0,
+              top: showBottom ? size.height : size.height * 0.29,
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeInOutBack,
+              child: BookingBottomCard(
+                continueDestination: () {
+                  setState(() {
+                    continueDestination = true;
+                  });
+                },
+              ),
+            ),
+
+            AnimatedPositioned(
+              bottom: 0,
+              right: 0,
+              top:
+                  (!showDestination || hide) ? size.height : size.height * 0.29,
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeInOutBack,
+              child: DestinationCard(
+                hide: hide,
+                callback: () {
+                  setState(() {
+                    hide = true;
+                  });
+                },
+              ),
+            ),
+            // * Continue Destination
+            AnimatedPositioned(
+              bottom: 0,
+              right: 0,
+              top: (!continueDestination || hide)
+                  ? size.height
+                  : size.height * 0.29,
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeInOutBack,
+              child: DestinationCard(
+                hide: hide,
+                callback: () {
+                  setState(() {
+                    hide = true;
+                  });
+                },
+              ),
+            ),
+            GreenCardAnimation(showBottom: showBottom),
+            GreenCardAnimation(showBottom: !showDestination),
           ],
         ),
       ),
@@ -229,120 +166,28 @@ class BookRide extends StatelessWidget {
   }
 }
 
-class CardScroll extends StatelessWidget {
-  const CardScroll({Key? key}) : super(key: key);
+//api key AIzaSyC5iu4_1S14V2beqz4G3NKe2kQsEs3zR5M
+
+class MapApp extends StatefulWidget {
+  const MapApp({Key? key}) : super(key: key);
+
+  @override
+  _MapAppState createState() => _MapAppState();
+}
+
+class _MapAppState extends State<MapApp> {
+  //27.7172° N, 85.3240° E
+  static const _initialCameraPosition = CameraPosition(
+    target: LatLng(27.700769, 85.300140),
+    zoom: 11.5,
+  );
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    return Container(
-      height: 109,
-      width: size.width,
-      padding: const EdgeInsets.only(right: 10),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 20,
-            child: Container(
-              height: 84,
-              width: size.width * 0.91,
-              padding: const EdgeInsets.only(
-                left: 24,
-                top: 37,
-                bottom: 17,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    height: 25,
-                    width: 25,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("images/relocate.png"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    "Your Location",
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: ColorConstants.boldTextColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: size.width * 0.060,
-                right: size.width * 0.060,
-              ),
-              child: Container(
-                height: 45,
-                width: size.width,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.06),
-                      blurRadius: 6,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(13),
-                  ),
-                ),
-                child: Center(
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 16),
-                      Container(
-                        height: 24,
-                        width: 24,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage("images/pin.png"),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Flexible(
-                        child: Text(
-                          "Pin location on map ",
-                          style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: ColorConstants.boldTextColor,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+    return GoogleMap(
+      myLocationButtonEnabled: false,
+      zoomControlsEnabled: true,
+      initialCameraPosition: _initialCameraPosition,
     );
   }
 }

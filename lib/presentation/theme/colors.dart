@@ -14,4 +14,8 @@ class ColorConstants {
   static final minColor = Color(0xFFDADADA);
   static final backIconColor = Color(0xFF707070);
   static final searchColor = Color(0xFFA2A2A2);
+  static final radioUnselected = Color(0xFFE3E3E3);
+  static final chipsBorder = Color(0xFFC2C2C2);
+  static final thinLine = Color(0xFFC9C9C9);
+  static final animatedColor = Color(0xFFDFDFDF);
 }
